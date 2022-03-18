@@ -1,0 +1,64 @@
+BACKUP ~d2-party-adder-iwd2/backup~
+AUTHOR ~Dan_P~
+VERSION ~1.0~
+ASK_EVERY_COMPONENT
+
+ALWAYS
+  OUTER_SPRINT customize_party_name @400
+  OUTER_SPRINT customize_top_desc @401
+  OUTER_SPRINT customize_bottom_desc @402
+  OUTER_SPRINT generic_bio @99
+END
+
+LANGUAGE ~English~
+         ~english~
+         ~d2-party-adder-iwd2/tra/english/setup.tra~
+		 
+
+////////////////////////////////////////////////////////////
+
+//Empty the party selection list 
+
+BEGIN @1
+REQUIRE_PREDICATE GAME_IS ~iwd2~ @7
+LABEL ~D2-IWD2-PARTY0~
+
+OUTER_SPRINT id2party0 @410
+COPY ~%MOD_FOLDER%/files/Party.ini~ ~Party.ini~
+  EVALUATE_BUFFER
+
+////////////////////////////////////////////////////////////
+
+//Add parties to selection list
+
+BEGIN @2
+REQUIRE_PREDICATE GAME_IS ~iwd2~ @7
+LABEL ~D2-IWD2-PARTY1~
+OUTER_TEXT_SPRINT party ~id2party1~
+INCLUDE ~%MOD_FOLDER%/tp2/id2party.tph~
+
+BEGIN @3
+REQUIRE_PREDICATE GAME_IS ~iwd2~ @7
+LABEL ~D2-IWD2-PARTY2~
+OUTER_TEXT_SPRINT party ~id2party2~
+INCLUDE ~%MOD_FOLDER%/tp2/id2party.tph~
+
+BEGIN @4
+REQUIRE_PREDICATE GAME_IS ~iwd2~ @7
+LABEL ~D2-IWD2-PARTY3~
+OUTER_TEXT_SPRINT party ~id2party3~
+INCLUDE ~%MOD_FOLDER%/tp2/id2party.tph~
+
+BEGIN @5
+REQUIRE_PREDICATE GAME_IS ~iwd2~ @7
+LABEL ~D2-IWD2-PARTY4~
+OUTER_TEXT_SPRINT party ~id2party4~
+INCLUDE ~%MOD_FOLDER%/tp2/id2party.tph~
+
+BEGIN @6
+REQUIRE_PREDICATE GAME_IS ~iwd2~ @7
+LABEL ~D2-IWD2-PARTY5~
+OUTER_TEXT_SPRINT party ~id2party5~
+INCLUDE ~%MOD_FOLDER%/tp2/id2party.tph~
+
+////////////////////////////////////////////////////////////

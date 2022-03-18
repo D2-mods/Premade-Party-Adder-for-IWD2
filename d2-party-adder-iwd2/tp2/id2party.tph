@@ -1,0 +1,458 @@
+//copy party descriptions to variables
+COPY - ~%MOD_FOLDER%/%party%/customize_party_name.txt~ ~%MOD_FOLDER%/temp~
+  READ_ASCII 0x0 ~party_name~ (%SOURCE_SIZE%) NULL
+COPY - ~%MOD_FOLDER%/%party%/customize_top_desc.txt~ ~%MOD_FOLDER%/temp~
+  READ_ASCII 0x0 ~top_desc~ (%SOURCE_SIZE%) NULL
+COPY - ~%MOD_FOLDER%/%party%/customize_bottom_desc.txt~ ~%MOD_FOLDER%/temp~
+  READ_ASCII 0x0 ~bottom_desc~ (%SOURCE_SIZE%) NULL
+
+
+//do stuff for each CHR file
+ACTION_BASH_FOR ~%MOD_FOLDER%/%party%~ ~.*.CHR~ BEGIN
+	
+  COPY ~%BASH_FOR_FILESPEC%~ ~Characters~	
+    READ_ASCII 0x8 name (32) NULL    // copy name from CHR header
+    READ_BYTE 0x5b3 align    // copy info from CRE data (all reads below)
+    READ_BYTE 0x5ad gender
+    READ_BYTE 0x5aa race
+    READ_BYTE 0x487 subrace
+    READ_BYTE 0x5ab class
+    READ_LONG 0x494 kit    // displays wrong in NearInfinity (but values are correct)
+  
+    READ_BYTE 0x48a str
+    READ_BYTE 0x48d dex
+    READ_BYTE 0x48e con
+    READ_BYTE 0x48b int
+    READ_BYTE 0x48c wis
+    READ_BYTE 0x48f cha
+	
+    READ_BYTE 0x43c alchemy
+    READ_BYTE 0x43d animal_empathy
+    READ_BYTE 0x43e bluff
+    READ_BYTE 0x43f concentration
+    READ_BYTE 0x440 diplomacy
+    READ_BYTE 0x441 disable_device
+    READ_BYTE 0x442 hide
+    READ_BYTE 0x443 intimidate
+    READ_BYTE 0x444 knowledge
+    READ_BYTE 0x445 move_silently
+    READ_BYTE 0x446 open_lock
+    READ_BYTE 0x447 pick_pocket
+    READ_BYTE 0x448 search
+    READ_BYTE 0x449 spellcraft
+    READ_BYTE 0x44a use_magic_device
+    READ_BYTE 0x44b wilderness_lore
+	
+    //Feats - each byte has up to 8 flags
+    READ_BYTE 0x3e4 feats11
+    READ_BYTE 0x3e5 feats12
+    READ_BYTE 0x3e6 feats13
+    READ_BYTE 0x3e7 feats14
+    READ_BYTE 0x3e8 feats21
+    READ_BYTE 0x3e9 feats22
+    READ_BYTE 0x3ea feats23
+    READ_BYTE 0x3eb feats24
+    READ_BYTE 0x3ec feats31
+    READ_BYTE 0x3ed feats32
+    READ_BYTE 0x3ee feats33
+    READ_BYTE 0x3ef feats34
+
+    //stats in Feats that you can take multiple times
+    READ_BYTE 0x3fc bow
+    READ_BYTE 0x3fd crossbow
+    READ_BYTE 0x3fe missile
+    READ_BYTE 0x3ff axe
+    READ_BYTE 0x400 mace
+    READ_BYTE 0x401 flail
+    READ_BYTE 0x402 polearm
+    READ_BYTE 0x403 hammer
+    READ_BYTE 0x404 staff
+    READ_BYTE 0x405 greatsword
+    READ_BYTE 0x406 large_sword
+    READ_BYTE 0x407 small_blade
+    READ_BYTE 0x408 toughness
+    READ_BYTE 0x409 armored_arcana
+    READ_BYTE 0x40a cleave
+    READ_BYTE 0x40b armor_prof
+    READ_BYTE 0x40c enchantment
+    READ_BYTE 0x40d evocation
+    READ_BYTE 0x40e necromancy
+    READ_BYTE 0x40f transmutation
+    READ_BYTE 0x410 spell_penetration
+    READ_BYTE 0x411 extra_rage
+    READ_BYTE 0x412 extra_shape
+    READ_BYTE 0x413 extra_smiting
+    READ_BYTE 0x414 extra_turning
+    READ_BYTE 0x415 bastard_sword
+	
+	
+	//assign text to variables
+    PATCH_IF (align = 17) BEGIN SPRINT align2 @600 END    // LG
+    PATCH_IF (align = 18) BEGIN SPRINT align2 @601 END    // LN
+    PATCH_IF (align = 19) BEGIN SPRINT align2 @602 END    // LE
+    PATCH_IF (align = 33) BEGIN SPRINT align2 @603 END    // NG
+    PATCH_IF (align = 34) BEGIN SPRINT align2 @604 END    // TN
+    PATCH_IF (align = 35) BEGIN SPRINT align2 @605 END    // NE
+    PATCH_IF (align = 49) BEGIN SPRINT align2 @606 END    // CG
+    PATCH_IF (align = 50) BEGIN SPRINT align2 @607 END    // CN
+    PATCH_IF (align = 51) BEGIN SPRINT align2 @608 END    // CE
+	
+    PATCH_IF (gender = 1) BEGIN SPRINT gender2 @610 END    // male
+    PATCH_IF (gender = 2) BEGIN SPRINT gender2 @611 END    // female
+	
+    PATCH_IF (race = 3) BEGIN SPRINT race2 @622 END    // Half-elf
+    PATCH_IF (race = 7) BEGIN SPRINT race2 @626 END    // Half-orc
+    PATCH_IF ((race = 1) AND (subrace = 0)) BEGIN SPRINT race2 @630 END    // Human subraces
+    PATCH_IF ((race = 1) AND (subrace = 1)) BEGIN SPRINT race2 @631 END
+    PATCH_IF ((race = 1) AND (subrace = 2)) BEGIN SPRINT race2 @632 END
+    PATCH_IF ((race = 2) AND (subrace = 0)) BEGIN SPRINT race2 @633 END    // Elves
+    PATCH_IF ((race = 2) AND (subrace = 1)) BEGIN SPRINT race2 @634 END
+    PATCH_IF ((race = 2) AND (subrace = 2)) BEGIN SPRINT race2 @635 END
+    PATCH_IF ((race = 4) AND (subrace = 0)) BEGIN SPRINT race2 @636 END    // Dwarves
+    PATCH_IF ((race = 4) AND (subrace = 1)) BEGIN SPRINT race2 @637 END
+    PATCH_IF ((race = 4) AND (subrace = 2)) BEGIN SPRINT race2 @638 END
+    PATCH_IF ((race = 5) AND (subrace = 0)) BEGIN SPRINT race2 @639 END    // Halflings
+    PATCH_IF ((race = 5) AND (subrace = 1)) BEGIN SPRINT race2 @640 END
+    PATCH_IF ((race = 5) AND (subrace = 2)) BEGIN SPRINT race2 @641 END
+    PATCH_IF ((race = 6) AND (subrace = 0)) BEGIN SPRINT race2 @642 END    // Gnomes
+    PATCH_IF ((race = 6) AND (subrace = 1)) BEGIN SPRINT race2 @643 END
+
+    PATCH_IF (class = 1) BEGIN SPRINT class2 @650 END    // Barbarian
+    PATCH_IF (class = 2) BEGIN SPRINT class2 @651 END    // Bard
+    PATCH_IF (class = 3) BEGIN SPRINT class2 @652 END    // Cleric
+    PATCH_IF (class = 4) BEGIN SPRINT class2 @653 END    // Druid
+    PATCH_IF (class = 5) BEGIN SPRINT class2 @654 END    // Fighter
+    PATCH_IF (class = 6) BEGIN SPRINT class2 @655 END    // Monk
+    PATCH_IF (class = 7) BEGIN SPRINT class2 @656 END    // Paladin
+    PATCH_IF (class = 8) BEGIN SPRINT class2 @657 END    // Ranger
+    PATCH_IF (class = 9) BEGIN SPRINT class2 @658 END    // Rogue
+    PATCH_IF (class = 10) BEGIN SPRINT class2 @659 END    // Sorcerer
+    PATCH_IF (class = 11) BEGIN SPRINT class2 @660 END    // Wizard
+	
+    PATCH_IF ((class = 7) AND (kit BAND BIT0)) BEGIN SPRINT class2 @670 END    // Paladins
+    PATCH_IF ((class = 7) AND (kit BAND BIT1)) BEGIN SPRINT class2 @671 END
+    PATCH_IF ((class = 7) AND (kit BAND BIT2)) BEGIN SPRINT class2 @672 END
+	
+    PATCH_IF ((class = 6) AND (kit BAND BIT3)) BEGIN SPRINT class2 @673 END    // Monks
+    PATCH_IF ((class = 6) AND (kit BAND BIT4)) BEGIN SPRINT class2 @674 END
+    PATCH_IF ((class = 6) AND (kit BAND BIT5)) BEGIN SPRINT class2 @675 END
+	
+    PATCH_IF ((class = 11) AND (kit BAND BIT6)) BEGIN SPRINT class2 @676 END    // Abjurer
+    PATCH_IF ((class = 11) AND (kit BAND BIT7)) BEGIN SPRINT class2 @677 END    // Conjurer
+    PATCH_IF ((class = 11) AND (kit BAND BIT8)) BEGIN SPRINT class2 @678 END    // Diviner
+    PATCH_IF ((class = 11) AND (kit BAND BIT9)) BEGIN SPRINT class2 @679 END    // Enchanter
+    PATCH_IF ((class = 11) AND (kit BAND BIT11)) BEGIN SPRINT class2 @680 END    // Evoker
+    PATCH_IF ((class = 11) AND (kit BAND BIT10)) BEGIN SPRINT class2 @681 END    // Illusionist
+    PATCH_IF ((class = 11) AND (kit BAND BIT12)) BEGIN SPRINT class2 @682 END    // Necromancer
+    PATCH_IF ((class = 11) AND (kit BAND BIT13)) BEGIN SPRINT class2 @683 END    // Transmuter
+//  PATCH_IF ((class = 11) AND (kit BAND BIT14)) BEGIN SPRINT class2 @684 END    // Generalist
+
+    PATCH_IF ((class = 3) AND (kit BAND BIT15)) BEGIN SPRINT class2 @685 END    // Ilmater
+    PATCH_IF ((class = 3) AND (kit BAND BIT16)) BEGIN SPRINT class2 @686 END    // Lathander
+    PATCH_IF ((class = 3) AND (kit BAND BIT17)) BEGIN SPRINT class2 @687 END    // Selune
+    PATCH_IF ((class = 3) AND (kit BAND BIT18)) BEGIN SPRINT class2 @688 END    // Helm
+    PATCH_IF ((class = 3) AND (kit BAND BIT19)) BEGIN SPRINT class2 @689 END    // Oghma
+    PATCH_IF ((class = 3) AND (kit BAND BIT20)) BEGIN SPRINT class2 @690 END    // Tempus
+    PATCH_IF ((class = 3) AND (kit BAND BIT21)) BEGIN SPRINT class2 @691 END    // Bane
+    PATCH_IF ((class = 3) AND (kit BAND BIT22)) BEGIN SPRINT class2 @692 END    // Mask
+    PATCH_IF ((class = 3) AND (kit BAND BIT23)) BEGIN SPRINT class2 @693 END    // Talos
+		
+    PATCH_IF (alchemy > 0)          BEGIN SPRINT s1 @700 END
+    PATCH_IF (animal_empathy > 0)   BEGIN SPRINT s2 @701 END
+    PATCH_IF (bluff > 0)            BEGIN SPRINT s3 @702 END 
+    PATCH_IF (concentration > 0)    BEGIN SPRINT s4 @703 END
+    PATCH_IF (diplomacy > 0)        BEGIN SPRINT s5 @704 END
+    PATCH_IF (disable_device > 0)   BEGIN SPRINT s6 @705 END
+    PATCH_IF (hide > 0)             BEGIN SPRINT s7 @706 END
+    PATCH_IF (intimidate > 0)       BEGIN SPRINT s8 @707 END
+    PATCH_IF (knowledge > 0)        BEGIN SPRINT s9 @708 END
+    PATCH_IF (move_silently > 0)    BEGIN SPRINT s10 @709 END
+    PATCH_IF (open_lock > 0)        BEGIN SPRINT s11 @710 END
+    PATCH_IF (pick_pocket > 0)      BEGIN SPRINT s12 @711 END
+    PATCH_IF (search > 0)           BEGIN SPRINT s13 @712 END
+    PATCH_IF (spellcraft > 0)       BEGIN SPRINT s14 @713 END
+    PATCH_IF (use_magic_device > 0) BEGIN SPRINT s15 @714 END
+    PATCH_IF (wilderness_lore > 0)  BEGIN SPRINT s16 @715 END
+	
+    PATCH_IF (%feats11% BAND BIT0) BEGIN SPRINT f1 @800 END    // Aegis of Rime
+    PATCH_IF (%feats11% BAND BIT1) BEGIN SPRINT f2 @801 END
+    PATCH_IF (%feats11% BAND BIT2) BEGIN SPRINT f3 @802 END
+    PATCH_IF (%feats11% BAND BIT3) BEGIN SPRINT f4 @803 END
+    PATCH_IF (%feats11% BAND BIT4) BEGIN SPRINT f5 @804 END
+    PATCH_IF (%feats11% BAND BIT5) BEGIN SPRINT f6 @805 END
+    PATCH_IF (%feats11% BAND BIT6) BEGIN SPRINT f7 @806 END
+    PATCH_IF (%feats11% BAND BIT7) BEGIN SPRINT f8 @807 END
+	
+    PATCH_IF (%feats12% BAND BIT0) BEGIN SPRINT f9 @808 END    // Cleave
+    PATCH_IF (%feats12% BAND BIT1) BEGIN SPRINT f10 @809 END
+    PATCH_IF (%feats12% BAND BIT2) BEGIN SPRINT f11 @810 END
+    PATCH_IF (%feats12% BAND BIT3) BEGIN SPRINT f12 @811 END
+    PATCH_IF (%feats12% BAND BIT4) BEGIN SPRINT f13 @812 END
+    PATCH_IF (%feats12% BAND BIT5) BEGIN SPRINT f14 @813 END
+    PATCH_IF (%feats12% BAND BIT6) BEGIN SPRINT f15 @814 END
+    PATCH_IF (%feats12% BAND BIT7) BEGIN SPRINT f16 @815 END
+		
+    PATCH_IF (%feats13% BAND BIT0) BEGIN SPRINT f17 @816 END    // Dodge
+    PATCH_IF (%feats13% BAND BIT1) BEGIN SPRINT f18 @817 END
+    PATCH_IF (%feats13% BAND BIT2) BEGIN SPRINT f19 @818 END
+    PATCH_IF (%feats13% BAND BIT3) BEGIN SPRINT f20 @819 END
+    PATCH_IF (%feats13% BAND BIT4) BEGIN SPRINT f21 @820 END
+    PATCH_IF (%feats13% BAND BIT5) BEGIN SPRINT f22 @821 END
+    PATCH_IF (%feats13% BAND BIT6) BEGIN SPRINT f23 @822 END
+    PATCH_IF (%feats13% BAND BIT7) BEGIN SPRINT f24 @823 END
+		
+    PATCH_IF (%feats14% BAND BIT0) BEGIN SPRINT f25 @824 END    // Fiendslayer
+    PATCH_IF (%feats14% BAND BIT1) BEGIN SPRINT f26 @825 END
+    PATCH_IF (%feats14% BAND BIT2) BEGIN SPRINT f27 @826 END
+    PATCH_IF (%feats14% BAND BIT3) BEGIN SPRINT f28 @827 END
+    PATCH_IF (%feats14% BAND BIT4) BEGIN SPRINT f29 @828 END
+    PATCH_IF (%feats14% BAND BIT5) BEGIN SPRINT f30 @829 END
+    PATCH_IF (%feats14% BAND BIT6) BEGIN SPRINT f31 @830 END
+    PATCH_IF (%feats14% BAND BIT7) BEGIN SPRINT f32 @831 END
+	
+    PATCH_IF (%feats21% BAND BIT0) BEGIN SPRINT f33 @832 END    // Improved Initiative
+    PATCH_IF (%feats21% BAND BIT1) BEGIN SPRINT f34 @833 END
+    PATCH_IF (%feats21% BAND BIT2) BEGIN SPRINT f35 @834 END
+    PATCH_IF (%feats21% BAND BIT3) BEGIN SPRINT f36 @835 END
+    PATCH_IF (%feats21% BAND BIT4) BEGIN SPRINT f37 @836 END
+    PATCH_IF (%feats21% BAND BIT5) BEGIN SPRINT f38 @837 END
+    PATCH_IF (%feats21% BAND BIT6) BEGIN SPRINT f39 @838 END
+    PATCH_IF (%feats21% BAND BIT7) BEGIN SPRINT f40 @839 END
+	
+    PATCH_IF (%feats22% BAND BIT0) BEGIN SPRINT f41 @840 END    // Flail
+    PATCH_IF (%feats22% BAND BIT1) BEGIN SPRINT f42 @841 END
+    PATCH_IF (%feats22% BAND BIT2) BEGIN SPRINT f43 @842 END
+    PATCH_IF (%feats22% BAND BIT3) BEGIN SPRINT f44 @843 END
+    PATCH_IF (%feats22% BAND BIT4) BEGIN SPRINT f45 @844 END
+    PATCH_IF (%feats22% BAND BIT5) BEGIN SPRINT f46 @845 END
+    PATCH_IF (%feats22% BAND BIT6) BEGIN SPRINT f47 @846 END
+    PATCH_IF (%feats22% BAND BIT7) BEGIN SPRINT f48 @847 END
+		
+    PATCH_IF (%feats23% BAND BIT0) BEGIN SPRINT f49 @848 END    // Precise Shot
+    PATCH_IF (%feats23% BAND BIT1) BEGIN SPRINT f50 @849 END
+    PATCH_IF (%feats23% BAND BIT2) BEGIN SPRINT f51 @850 END
+    PATCH_IF (%feats23% BAND BIT3) BEGIN SPRINT f52 @851 END
+    PATCH_IF (%feats23% BAND BIT4) BEGIN SPRINT f53 @852 END
+    PATCH_IF (%feats23% BAND BIT5) BEGIN SPRINT f54 @853 END
+    PATCH_IF (%feats23% BAND BIT6) BEGIN SPRINT f55 @854 END
+    PATCH_IF (%feats23% BAND BIT7) BEGIN SPRINT f56 @855 END
+		
+    PATCH_IF (%feats24% BAND BIT0) BEGIN SPRINT f57 @856 END    // Staff
+    PATCH_IF (%feats24% BAND BIT1) BEGIN SPRINT f58 @857 END
+    PATCH_IF (%feats24% BAND BIT2) BEGIN SPRINT f59 @858 END
+    PATCH_IF (%feats24% BAND BIT3) BEGIN SPRINT f60 @859 END
+    PATCH_IF (%feats24% BAND BIT4) BEGIN SPRINT f61 @860 END
+    PATCH_IF (%feats24% BAND BIT5) BEGIN SPRINT f62 @861 END
+    PATCH_IF (%feats24% BAND BIT6) BEGIN SPRINT f63 @862 END
+    PATCH_IF (%feats24% BAND BIT7) BEGIN SPRINT f64 @863 END
+	
+    PATCH_IF (%feats31% BAND BIT0) BEGIN SPRINT f65 @864 END    // Improved Initiative
+    PATCH_IF (%feats31% BAND BIT1) BEGIN SPRINT f66 @865 END
+    PATCH_IF (%feats31% BAND BIT2) BEGIN SPRINT f67 @866 END
+    PATCH_IF (%feats31% BAND BIT3) BEGIN SPRINT f68 @867 END
+    PATCH_IF (%feats31% BAND BIT4) BEGIN SPRINT f69 @868 END
+    PATCH_IF (%feats31% BAND BIT5) BEGIN SPRINT f70 @869 END
+    PATCH_IF (%feats31% BAND BIT6) BEGIN SPRINT f71 @870 END
+    PATCH_IF (%feats31% BAND BIT7) BEGIN SPRINT f72 @871 END
+	
+    PATCH_IF (%feats32% BAND BIT0) BEGIN SPRINT f73 @872 END    // Wild Shape, Boring Beetle
+    PATCH_IF (%feats32% BAND BIT1) BEGIN SPRINT f74 @873 END
+    PATCH_IF (%feats32% BAND BIT2) BEGIN SPRINT f75 @874 END
+	
+		
+    //copy patches back to main variables
+    TEXT_SPRINT align ~%align2%~
+    TEXT_SPRINT gender ~%gender2%~
+    TEXT_SPRINT race ~%race2%~
+    TEXT_SPRINT class ~%class2%~
+	
+    //character text (party selection screen)
+    SPRINT a @450    // ~%name% (%align%, %gender%, %race%, %class%): ~
+    SPRINT b @451    // ~STR: %str%, DEX: %dex%, CON: %con%, INT: %int%, WIS: %wis%, CHA: %cha%, ~
+    SPRINT c @452    // ~Skills: ~
+    SPRINT d @453    // ~Feats: ~
+	
+	
+    //add Skills to variable %c%
+    PATCH_IF (alchemy > 0)          BEGIN TEXT_SPRINT c ~%c%%s1%, ~ END
+    PATCH_IF (animal_empathy > 0)   BEGIN TEXT_SPRINT c ~%c%%s2%, ~ END
+    PATCH_IF (bluff > 0)            BEGIN TEXT_SPRINT c ~%c%%s3%, ~ END
+    PATCH_IF (concentration > 0)    BEGIN TEXT_SPRINT c ~%c%%s4%, ~ END
+    PATCH_IF (diplomacy > 0)        BEGIN TEXT_SPRINT c ~%c%%s5%, ~ END
+    PATCH_IF (disable_device > 0)   BEGIN TEXT_SPRINT c ~%c%%s6%, ~ END
+    PATCH_IF (hide > 0)             BEGIN TEXT_SPRINT c ~%c%%s7%, ~ END
+    PATCH_IF (intimidate > 0)       BEGIN TEXT_SPRINT c ~%c%%s8%, ~ END
+    PATCH_IF (knowledge > 0)        BEGIN TEXT_SPRINT c ~%c%%s9%, ~ END
+    PATCH_IF (move_silently > 0)    BEGIN TEXT_SPRINT c ~%c%%s10%, ~ END
+    PATCH_IF (open_lock > 0)        BEGIN TEXT_SPRINT c ~%c%%s11%, ~ END
+    PATCH_IF (pick_pocket > 0)      BEGIN TEXT_SPRINT c ~%c%%s12%, ~ END
+    PATCH_IF (search > 0)           BEGIN TEXT_SPRINT c ~%c%%s13%, ~ END
+    PATCH_IF (spellcraft > 0)       BEGIN TEXT_SPRINT c ~%c%%s14%, ~ END
+    PATCH_IF (use_magic_device > 0) BEGIN TEXT_SPRINT c ~%c%%s15%, ~ END
+    PATCH_IF (wilderness_lore > 0)  BEGIN TEXT_SPRINT c ~%c%%s16%, ~ END
+	
+	
+    //add Feats to variable %d%
+    PATCH_IF (%feats11% BAND BIT0) BEGIN TEXT_SPRINT d ~%d%%f1%, ~ END    // Aegis of Rime
+    PATCH_IF (%feats11% BAND BIT1) BEGIN TEXT_SPRINT d ~%d%%f2%, ~ END
+    PATCH_IF (%feats11% BAND BIT2) BEGIN TEXT_SPRINT d ~%d%%f3%, ~ END
+//  PATCH_IF (%feats11% BAND BIT3) BEGIN TEXT_SPRINT d ~%d%%f4%, ~ END  armor
+    PATCH_IF (%feats11% BAND BIT4) BEGIN TEXT_SPRINT d ~%d%%f5%, ~ END
+    PATCH_IF (%feats11% BAND BIT5) BEGIN TEXT_SPRINT d ~%d%%f6%, ~ END
+    PATCH_IF (%feats11% BAND BIT6) BEGIN TEXT_SPRINT d ~%d%%f7%, ~ END
+    PATCH_IF (%feats11% BAND BIT7) BEGIN TEXT_SPRINT d ~%d%%f8%, ~ END
+	
+    PATCH_IF (%feats12% BAND BIT0) BEGIN TEXT_SPRINT d ~%d%%f9%, ~ END    // Cleave
+    PATCH_IF (%feats12% BAND BIT1) BEGIN TEXT_SPRINT d ~%d%%f10%, ~ END
+    PATCH_IF (%feats12% BAND BIT2) BEGIN TEXT_SPRINT d ~%d%%f11%, ~ END
+    PATCH_IF (%feats12% BAND BIT3) BEGIN TEXT_SPRINT d ~%d%%f12%, ~ END
+    PATCH_IF (%feats12% BAND BIT4) BEGIN TEXT_SPRINT d ~%d%%f13%, ~ END
+    PATCH_IF (%feats12% BAND BIT5) BEGIN TEXT_SPRINT d ~%d%%f14%, ~ END
+    PATCH_IF (%feats12% BAND BIT6) BEGIN TEXT_SPRINT d ~%d%%f15%, ~ END
+    PATCH_IF (%feats12% BAND BIT7) BEGIN TEXT_SPRINT d ~%d%%f16%, ~ END
+		
+    PATCH_IF (%feats13% BAND BIT0) BEGIN TEXT_SPRINT d ~%d%%f17%, ~ END    // Dodge
+    PATCH_IF (%feats13% BAND BIT1) BEGIN TEXT_SPRINT d ~%d%%f18%, ~ END
+    PATCH_IF (%feats13% BAND BIT2) BEGIN TEXT_SPRINT d ~%d%%f19%, ~ END
+    PATCH_IF (%feats13% BAND BIT3) BEGIN TEXT_SPRINT d ~%d%%f20%, ~ END
+    PATCH_IF (%feats13% BAND BIT4) BEGIN TEXT_SPRINT d ~%d%%f21%, ~ END
+    PATCH_IF (%feats13% BAND BIT5) BEGIN TEXT_SPRINT d ~%d%%f22%, ~ END
+    PATCH_IF (%feats13% BAND BIT6) BEGIN TEXT_SPRINT d ~%d%%f23%, ~ END
+    PATCH_IF (%feats13% BAND BIT7) BEGIN TEXT_SPRINT d ~%d%%f24%, ~ END
+		
+    PATCH_IF (%feats14% BAND BIT0) BEGIN TEXT_SPRINT d ~%d%%f25%, ~ END    // Fiendslayer
+    PATCH_IF (%feats14% BAND BIT1) BEGIN TEXT_SPRINT d ~%d%%f26%, ~ END
+    PATCH_IF (%feats14% BAND BIT2) BEGIN TEXT_SPRINT d ~%d%%f27%, ~ END
+    PATCH_IF (%feats14% BAND BIT3) BEGIN TEXT_SPRINT d ~%d%%f28%, ~ END
+    PATCH_IF (%feats14% BAND BIT4) BEGIN TEXT_SPRINT d ~%d%%f29%, ~ END
+    PATCH_IF (%feats14% BAND BIT5) BEGIN TEXT_SPRINT d ~%d%%f30%, ~ END
+    PATCH_IF (%feats14% BAND BIT6) BEGIN TEXT_SPRINT d ~%d%%f31%, ~ END
+    PATCH_IF (%feats14% BAND BIT7) BEGIN TEXT_SPRINT d ~%d%%f32%, ~ END
+	
+    PATCH_IF (%feats21% BAND BIT0) BEGIN TEXT_SPRINT d ~%d%%f33%, ~ END    // Improved Initiative
+    PATCH_IF (%feats21% BAND BIT1) BEGIN TEXT_SPRINT d ~%d%%f34%, ~ END
+    PATCH_IF (%feats21% BAND BIT2) BEGIN TEXT_SPRINT d ~%d%%f35%, ~ END
+    PATCH_IF (%feats21% BAND BIT3) BEGIN TEXT_SPRINT d ~%d%%f36%, ~ END
+    PATCH_IF (%feats21% BAND BIT4) BEGIN TEXT_SPRINT d ~%d%%f37%, ~ END
+    PATCH_IF (%feats21% BAND BIT5) BEGIN TEXT_SPRINT d ~%d%%f38%, ~ END
+    PATCH_IF (%axe% > 1) BEGIN TEXT_SPRINT d ~%d%%f39%, ~ END
+    PATCH_IF (%bow% > 1) BEGIN TEXT_SPRINT d ~%d%%f40%, ~ END
+	
+    PATCH_IF (%flail% > 1) BEGIN TEXT_SPRINT d ~%d%%f41%, ~ END    // Flail
+    PATCH_IF (%greatsword% > 1) BEGIN TEXT_SPRINT d ~%d%%f42%, ~ END
+    PATCH_IF (%hammer% > 1) BEGIN TEXT_SPRINT d ~%d%%f43%, ~ END
+    PATCH_IF (%large_sword% > 1) BEGIN TEXT_SPRINT d ~%d%%f44%, ~ END
+    PATCH_IF (%polearm% > 1) BEGIN TEXT_SPRINT d ~%d%%f45%, ~ END
+    PATCH_IF (%feats22% BAND BIT5) BEGIN TEXT_SPRINT d ~%d%%f46%, ~ END
+    PATCH_IF (%feats22% BAND BIT6) BEGIN TEXT_SPRINT d ~%d%%f47%, ~ END
+    PATCH_IF (%feats22% BAND BIT7) BEGIN TEXT_SPRINT d ~%d%%f48%, ~ END
+		
+    PATCH_IF (%feats23% BAND BIT0) BEGIN TEXT_SPRINT d ~%d%%f49%, ~ END    // Precise Shot
+    PATCH_IF (%feats23% BAND BIT1) BEGIN TEXT_SPRINT d ~%d%%f50%, ~ END
+    PATCH_IF (%feats23% BAND BIT2) BEGIN TEXT_SPRINT d ~%d%%f51%, ~ END
+    PATCH_IF (%feats23% BAND BIT3) BEGIN TEXT_SPRINT d ~%d%%f52%, ~ END
+//  PATCH_IF (%feats23% BAND BIT4) BEGIN TEXT_SPRINT d ~%d%%f53%, ~ END  shield
+    PATCH_IF (%crossbow% > 1) BEGIN TEXT_SPRINT d ~%d%%f54%, ~ END
+    PATCH_IF (%mace% > 1) BEGIN TEXT_SPRINT d ~%d%%f55%, ~ END
+    PATCH_IF (%missile% > 1) BEGIN TEXT_SPRINT d ~%d%%f56%, ~ END
+		
+    PATCH_IF (%staff% > 1) BEGIN TEXT_SPRINT d ~%d%%f57%, ~ END    // Staff
+    PATCH_IF (%small_blade% > 1) BEGIN TEXT_SPRINT d ~%d%%f58%, ~ END
+    PATCH_IF (%feats24% BAND BIT2) BEGIN TEXT_SPRINT d ~%d%%f59%, ~ END
+    PATCH_IF (%feats24% BAND BIT3) BEGIN TEXT_SPRINT d ~%d%%f60%, ~ END
+    PATCH_IF (%feats24% BAND BIT4) BEGIN TEXT_SPRINT d ~%d%%f61%, ~ END
+    PATCH_IF (%feats24% BAND BIT5) BEGIN TEXT_SPRINT d ~%d%%f62%, ~ END
+    PATCH_IF (%feats24% BAND BIT6) BEGIN TEXT_SPRINT d ~%d%%f63%, ~ END
+    PATCH_IF (%feats24% BAND BIT7) BEGIN TEXT_SPRINT d ~%d%%f64%, ~ END
+	
+    PATCH_IF (%feats31% BAND BIT0) BEGIN TEXT_SPRINT d ~%d%%f65%, ~ END    // Improved Initiative
+    PATCH_IF (%feats31% BAND BIT1) BEGIN TEXT_SPRINT d ~%d%%f66%, ~ END
+    PATCH_IF (%feats31% BAND BIT2) BEGIN TEXT_SPRINT d ~%d%%f67%, ~ END
+    PATCH_IF (%feats31% BAND BIT3) BEGIN TEXT_SPRINT d ~%d%%f68%, ~ END
+    PATCH_IF (%feats31% BAND BIT4) BEGIN TEXT_SPRINT d ~%d%%f69%, ~ END
+    PATCH_IF (%feats31% BAND BIT5) BEGIN TEXT_SPRINT d ~%d%%f70%, ~ END
+    PATCH_IF (%feats31% BAND BIT6) BEGIN TEXT_SPRINT d ~%d%%f71%, ~ END
+    PATCH_IF (%feats31% BAND BIT7) BEGIN TEXT_SPRINT d ~%d%%f72%, ~ END
+	
+    PATCH_IF (%feats32% BAND BIT0) BEGIN TEXT_SPRINT d ~%d%%f73%, ~ END    // Wild Shape, Boring Beetle
+    PATCH_IF (%feats32% BAND BIT1) BEGIN TEXT_SPRINT d ~%d%%f74%, ~ END
+    PATCH_IF (%feats32% BAND BIT2) BEGIN TEXT_SPRINT d ~%d%%f75%, ~ END
+	
+    TEXT_SPRINT d ~%d%)~    // use REPLACE_TEXTUALLY later to add a period at the end
+	
+	
+    //set character info to variable
+    PATCH_IF !(VARIABLE_IS_SET char1desc) BEGIN TEXT_SPRINT char1desc ~%a%%b%%c%%d%~ END ELSE BEGIN
+    PATCH_IF !(VARIABLE_IS_SET char2desc) BEGIN TEXT_SPRINT char2desc ~%a%%b%%c%%d%~ END ELSE BEGIN
+    PATCH_IF !(VARIABLE_IS_SET char3desc) BEGIN TEXT_SPRINT char3desc ~%a%%b%%c%%d%~ END ELSE BEGIN
+    PATCH_IF !(VARIABLE_IS_SET char4desc) BEGIN TEXT_SPRINT char4desc ~%a%%b%%c%%d%~ END ELSE BEGIN
+    PATCH_IF !(VARIABLE_IS_SET char5desc) BEGIN TEXT_SPRINT char5desc ~%a%%b%%c%%d%~ END ELSE BEGIN
+    PATCH_IF !(VARIABLE_IS_SET char6desc) BEGIN TEXT_SPRINT char6desc ~%a%%b%%c%%d%~ END
+    END
+    END
+    END
+    END
+    END
+	
+	//set resource names to variable
+    PATCH_IF !(VARIABLE_IS_SET char1) BEGIN TEXT_SPRINT char1 ~%BASH_FOR_RES%~ END ELSE BEGIN
+    PATCH_IF !(VARIABLE_IS_SET char2) BEGIN TEXT_SPRINT char2 ~%BASH_FOR_RES%~ END ELSE BEGIN
+    PATCH_IF !(VARIABLE_IS_SET char3) BEGIN TEXT_SPRINT char3 ~%BASH_FOR_RES%~ END ELSE BEGIN
+    PATCH_IF !(VARIABLE_IS_SET char4) BEGIN TEXT_SPRINT char4 ~%BASH_FOR_RES%~ END ELSE BEGIN
+    PATCH_IF !(VARIABLE_IS_SET char5) BEGIN TEXT_SPRINT char5 ~%BASH_FOR_RES%~ END ELSE BEGIN
+    PATCH_IF !(VARIABLE_IS_SET char6) BEGIN TEXT_SPRINT char6 ~%BASH_FOR_RES%~ END
+    END
+    END
+    END
+    END
+    END
+	
+	
+  ACTION_IF (FILE_EXISTS ~%MOD_FOLDER%/%party%/%BASH_FOR_RES%.RES~) BEGIN    // use custom biography (if RES exists)
+    COPY ~%MOD_FOLDER%/%party%/%BASH_FOR_RES%.RES~ ~Characters~
+  END
+  ELSE BEGIN
+    COPY ~%MOD_FOLDER%/files/generic_bio.txt~ ~Characters/%BASH_FOR_RES%.RES~    // or use generic biography
+      EVALUATE_BUFFER    // replaces variable with generic biography
+      EVALUATE_BUFFER    // double evaluate for any variables in new text
+  END
+
+END
+  
+
+//add portrait files (optional)
+ACTION_BASH_FOR ~%MOD_FOLDER%/%party%~ ~.*.BMP~ BEGIN
+  COPY ~%BASH_FOR_FILESPEC%~ ~override~
+END
+
+
+//Sets blank text for unfilled party slots (hides them on selection screen)
+ACTION_IF !(VARIABLE_IS_SET char1desc) BEGIN OUTER_TEXT_SPRINT char1desc ~~ END
+ACTION_IF !(VARIABLE_IS_SET char2desc) BEGIN OUTER_TEXT_SPRINT char2desc ~~ END
+ACTION_IF !(VARIABLE_IS_SET char3desc) BEGIN OUTER_TEXT_SPRINT char3desc ~~ END
+ACTION_IF !(VARIABLE_IS_SET char4desc) BEGIN OUTER_TEXT_SPRINT char4desc ~~ END
+ACTION_IF !(VARIABLE_IS_SET char5desc) BEGIN OUTER_TEXT_SPRINT char5desc ~~ END
+ACTION_IF !(VARIABLE_IS_SET char6desc) BEGIN OUTER_TEXT_SPRINT char6desc ~~ END
+
+//Sets blank entry for unused resource slots
+ACTION_IF !(VARIABLE_IS_SET char1) BEGIN OUTER_TEXT_SPRINT char1 ~~ END
+ACTION_IF !(VARIABLE_IS_SET char2) BEGIN OUTER_TEXT_SPRINT char2 ~~ END
+ACTION_IF !(VARIABLE_IS_SET char3) BEGIN OUTER_TEXT_SPRINT char3 ~~ END
+ACTION_IF !(VARIABLE_IS_SET char4) BEGIN OUTER_TEXT_SPRINT char4 ~~ END
+ACTION_IF !(VARIABLE_IS_SET char5) BEGIN OUTER_TEXT_SPRINT char5 ~~ END
+ACTION_IF !(VARIABLE_IS_SET char6) BEGIN OUTER_TEXT_SPRINT char6 ~~ END
+
+
+//add to Party.ini (i.e. make selectable in party list)
+COPY ~Party.ini~ ~Party.ini~
+  APPEND_FILE_EVALUATE TEXT ~%MOD_FOLDER%/files/id2template.txt~
+  EVALUATE_BUFFER
+  REPLACE_TEXTUALLY ~, )~ ~.~
+  
+  COUNT_REGEXP_INSTANCES ~[Party [0-9]*]~ count
+  SET partynumber = (count - 1)
+  REPLACE_TEXTUALLY ~99]~ ~%partynumber%]~
+BUT_ONLY
+
+
+CLEAR_MEMORY

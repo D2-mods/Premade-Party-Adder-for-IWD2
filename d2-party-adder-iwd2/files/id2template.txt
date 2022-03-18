@@ -1,0 +1,17 @@
+
+[Party 99]
+Name = %party_name%
+Descr1 = %top_desc%
+Descr2 = %char1desc%
+Descr3 = %char2desc%
+Descr4 = %char3desc%
+Descr5 = %char4desc%
+Descr6 = %char5desc%
+Descr7 = %char6desc%
+Descr8 = %bottom_desc%
+Char1 = %char1%
+Char2 = %char2%
+Char3 = %char3%
+Char4 = %char4%
+Char5 = %char5%
+Char6 = %char6%
