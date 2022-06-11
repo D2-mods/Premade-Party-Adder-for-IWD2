@@ -38,8 +38,28 @@ Additional info
 
 
 ==================================================
+CREDITS
+==================================================
+Mod Author: Dan_P
+
+Tools and Resources used:
+- WeiDU (https://github.com/WeiDUorg/weidu)
+- NearInfinity (https://github.com/Argent77/NearInfinity)
+- Notepad++ (https://notepad-plus-plus.org/)
+- Git Bash (https://git-scm.com/downloads)
+- Infinity Auto Packager (https://github.com/InfinityTools/InfinityAutoPackager)
+- IESDP (https://gibberlings3.github.io/iesdp/main.htm)
+- LibIconv for Windows (http://gnuwin32.sourceforge.net/packages/libiconv.htm)
+
+
+==================================================
 Version info
 ==================================================
+v1.1
+- changed backup folder to weidu_external
+- added HANDLE_CHARSETS function
+- changed to be able to install/uninstall all at once
+
 v1.0 - release version
 v0.4 - minor fixes/adjustments
 v0.3 - added text for skills and feats

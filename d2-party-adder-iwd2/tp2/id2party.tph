@@ -86,7 +86,7 @@ ACTION_BASH_FOR ~%MOD_FOLDER%/%party%~ ~.*.CHR~ BEGIN
     READ_BYTE 0x415 bastard_sword
 	
 	
-	//assign text to variables
+    //assign text to variables
     PATCH_IF (align = 17) BEGIN SPRINT align2 @600 END    // LG
     PATCH_IF (align = 18) BEGIN SPRINT align2 @601 END    // LN
     PATCH_IF (align = 19) BEGIN SPRINT align2 @602 END    // LE
@@ -394,7 +394,7 @@ ACTION_BASH_FOR ~%MOD_FOLDER%/%party%~ ~.*.CHR~ BEGIN
     END
     END
 	
-	//set resource names to variable
+    //set resource names to variable
     PATCH_IF !(VARIABLE_IS_SET char1) BEGIN TEXT_SPRINT char1 ~%BASH_FOR_RES%~ END ELSE BEGIN
     PATCH_IF !(VARIABLE_IS_SET char2) BEGIN TEXT_SPRINT char2 ~%BASH_FOR_RES%~ END ELSE BEGIN
     PATCH_IF !(VARIABLE_IS_SET char3) BEGIN TEXT_SPRINT char3 ~%BASH_FOR_RES%~ END ELSE BEGIN
