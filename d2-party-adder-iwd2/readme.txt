@@ -16,11 +16,12 @@ NOTE: Currently, the party info will only show unmodded Skill/Feat names.
 Installation
 ==================================================
 - Place up to 6 CHR files in one of the party folders
+- Optional: Add biography and/or portrait files to the folder
 - Run the installer
 - Each party is a separate component and CHR files are added to the Characters folder
 	
 Optional: 
-- Biographies will also be copied to the Characters folder (must be same filename). These are just text files with the .RES extension. Characters without a RES file will instead get the generic biography used for Black Pits 2, with the addition of their name.
+- Biographies will also be added. These are just text files with the .RES extension. They must have the same filename as the CHR file. Characters without a RES file will instead get the generic biography used for Black Pits 2, with the addition of their name.
 - Portraits in the folder will be copied to the override (though not made selectable at character creation).
 
 
@@ -40,7 +41,7 @@ Additional info
 ==================================================
 CREDITS
 ==================================================
-Mod Author: Dan_P
+Modder: Dan_P
 
 Tools and Resources used:
 - WeiDU (https://github.com/WeiDUorg/weidu)
@@ -55,6 +56,10 @@ Tools and Resources used:
 ==================================================
 Version info
 ==================================================
+v1.2
+- The "Empty the party selection list" option will now be skipped if any custom parties from this mod are installed.
+- Party components will fail to install if no CHR files are in the folder. This won't give a WeiDU error. It'll just say "INSTALLATION ABORTED". If using a mod manager, installation will continue uninterrupted.
+
 v1.1
 - changed backup folder to weidu_external
 - added HANDLE_CHARSETS function

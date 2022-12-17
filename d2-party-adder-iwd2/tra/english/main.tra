@@ -1,3 +1,9 @@
+/*
+Text in this file appears in the game.
+Variables (%%) are evaluated during install.
+*/
+
+
 //Biography (from Black Pits 2)
 @99 = ~%name%... you wanted to be an adventurer for as long as you can remember. Even as a small child, you knew there was a vast world beyond the simple life you witnessed around you every day. Traveling bards fanned the flames of your determination to escape your mundane existence with tales of dragons and monsters, wizards and knights, legendary heroes and infamous villains. And you knew then that one day your deeds... your name... would be known throughout the realms.~
 
@@ -203,3 +209,7 @@ Descr3 = Press Done to create your characters, or select a party from the party 
 @872 = ~Wild Shape - Boring Beetle~
 @873 = ~Wild Shape - Panther~
 @874 = ~Wild Shape - Shambling Mound~
+
+
+/*
+*/

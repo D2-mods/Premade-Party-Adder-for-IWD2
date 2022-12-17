@@ -16,7 +16,7 @@ NOTE: Currently, the party info will only show unmodded Skill/Feat names.
 - Each party is a separate component and CHR files are added to the Characters folder
 	
 Optional: 
-- Biographies will also be copied to the Characters folder (must be same filename). These are just text files with the .RES extension. Characters without a RES file will instead get the generic biography used for Black Pits 2, with the addition of their name.
+- Biographies will also be added. These are just text files with the .RES extension. They must have the same filename as the CHR file. Characters without a RES file will instead get the generic biography used for Black Pits 2, with the addition of their name.
 - Portraits in the folder will be copied to the override (though not made selectable at character creation).
 
 

@@ -8,7 +8,7 @@ COPY - ~%MOD_FOLDER%/%party%/customize_bottom_desc.txt~ ~%MOD_FOLDER%/temp~
 
 
 //do stuff for each CHR file
-ACTION_BASH_FOR ~%MOD_FOLDER%/%party%~ ~.*.CHR~ BEGIN
+ACTION_BASH_FOR ~%MOD_FOLDER%/%party%~ ~.*\.CHR~ BEGIN
 	
   COPY ~%BASH_FOR_FILESPEC%~ ~Characters~	
     READ_ASCII 0x8 name (32) NULL    // copy name from CHR header
@@ -296,7 +296,7 @@ ACTION_BASH_FOR ~%MOD_FOLDER%/%party%~ ~.*.CHR~ BEGIN
     PATCH_IF (%feats11% BAND BIT0) BEGIN TEXT_SPRINT d ~%d%%f1%, ~ END    // Aegis of Rime
     PATCH_IF (%feats11% BAND BIT1) BEGIN TEXT_SPRINT d ~%d%%f2%, ~ END
     PATCH_IF (%feats11% BAND BIT2) BEGIN TEXT_SPRINT d ~%d%%f3%, ~ END
-//  PATCH_IF (%feats11% BAND BIT3) BEGIN TEXT_SPRINT d ~%d%%f4%, ~ END  armor
+//  PATCH_IF (%feats11% BAND BIT3) BEGIN TEXT_SPRINT d ~%d%%f4%, ~ END    // armor feat (not displayed)
     PATCH_IF (%feats11% BAND BIT4) BEGIN TEXT_SPRINT d ~%d%%f5%, ~ END
     PATCH_IF (%feats11% BAND BIT5) BEGIN TEXT_SPRINT d ~%d%%f6%, ~ END
     PATCH_IF (%feats11% BAND BIT6) BEGIN TEXT_SPRINT d ~%d%%f7%, ~ END
@@ -335,14 +335,14 @@ ACTION_BASH_FOR ~%MOD_FOLDER%/%party%~ ~.*.CHR~ BEGIN
     PATCH_IF (%feats21% BAND BIT3) BEGIN TEXT_SPRINT d ~%d%%f36%, ~ END
     PATCH_IF (%feats21% BAND BIT4) BEGIN TEXT_SPRINT d ~%d%%f37%, ~ END
     PATCH_IF (%feats21% BAND BIT5) BEGIN TEXT_SPRINT d ~%d%%f38%, ~ END
-    PATCH_IF (%axe% > 1) BEGIN TEXT_SPRINT d ~%d%%f39%, ~ END
-    PATCH_IF (%bow% > 1) BEGIN TEXT_SPRINT d ~%d%%f40%, ~ END
+    PATCH_IF (%axe% > 1)           BEGIN TEXT_SPRINT d ~%d%%f39%, ~ END
+    PATCH_IF (%bow% > 1)           BEGIN TEXT_SPRINT d ~%d%%f40%, ~ END
 	
-    PATCH_IF (%flail% > 1) BEGIN TEXT_SPRINT d ~%d%%f41%, ~ END    // Flail
-    PATCH_IF (%greatsword% > 1) BEGIN TEXT_SPRINT d ~%d%%f42%, ~ END
-    PATCH_IF (%hammer% > 1) BEGIN TEXT_SPRINT d ~%d%%f43%, ~ END
-    PATCH_IF (%large_sword% > 1) BEGIN TEXT_SPRINT d ~%d%%f44%, ~ END
-    PATCH_IF (%polearm% > 1) BEGIN TEXT_SPRINT d ~%d%%f45%, ~ END
+    PATCH_IF (%flail% > 1)         BEGIN TEXT_SPRINT d ~%d%%f41%, ~ END    // Flail
+    PATCH_IF (%greatsword% > 1)    BEGIN TEXT_SPRINT d ~%d%%f42%, ~ END
+    PATCH_IF (%hammer% > 1)        BEGIN TEXT_SPRINT d ~%d%%f43%, ~ END
+    PATCH_IF (%large_sword% > 1)   BEGIN TEXT_SPRINT d ~%d%%f44%, ~ END
+    PATCH_IF (%polearm% > 1)       BEGIN TEXT_SPRINT d ~%d%%f45%, ~ END
     PATCH_IF (%feats22% BAND BIT5) BEGIN TEXT_SPRINT d ~%d%%f46%, ~ END
     PATCH_IF (%feats22% BAND BIT6) BEGIN TEXT_SPRINT d ~%d%%f47%, ~ END
     PATCH_IF (%feats22% BAND BIT7) BEGIN TEXT_SPRINT d ~%d%%f48%, ~ END
@@ -351,13 +351,13 @@ ACTION_BASH_FOR ~%MOD_FOLDER%/%party%~ ~.*.CHR~ BEGIN
     PATCH_IF (%feats23% BAND BIT1) BEGIN TEXT_SPRINT d ~%d%%f50%, ~ END
     PATCH_IF (%feats23% BAND BIT2) BEGIN TEXT_SPRINT d ~%d%%f51%, ~ END
     PATCH_IF (%feats23% BAND BIT3) BEGIN TEXT_SPRINT d ~%d%%f52%, ~ END
-//  PATCH_IF (%feats23% BAND BIT4) BEGIN TEXT_SPRINT d ~%d%%f53%, ~ END  shield
-    PATCH_IF (%crossbow% > 1) BEGIN TEXT_SPRINT d ~%d%%f54%, ~ END
-    PATCH_IF (%mace% > 1) BEGIN TEXT_SPRINT d ~%d%%f55%, ~ END
-    PATCH_IF (%missile% > 1) BEGIN TEXT_SPRINT d ~%d%%f56%, ~ END
+//  PATCH_IF (%feats23% BAND BIT4) BEGIN TEXT_SPRINT d ~%d%%f53%, ~ END    // shield feat (not displayed)
+    PATCH_IF (%crossbow% > 1)      BEGIN TEXT_SPRINT d ~%d%%f54%, ~ END
+    PATCH_IF (%mace% > 1)          BEGIN TEXT_SPRINT d ~%d%%f55%, ~ END
+    PATCH_IF (%missile% > 1)       BEGIN TEXT_SPRINT d ~%d%%f56%, ~ END
 		
-    PATCH_IF (%staff% > 1) BEGIN TEXT_SPRINT d ~%d%%f57%, ~ END    // Staff
-    PATCH_IF (%small_blade% > 1) BEGIN TEXT_SPRINT d ~%d%%f58%, ~ END
+    PATCH_IF (%staff% > 1)         BEGIN TEXT_SPRINT d ~%d%%f57%, ~ END    // Staff
+    PATCH_IF (%small_blade% > 1)   BEGIN TEXT_SPRINT d ~%d%%f58%, ~ END
     PATCH_IF (%feats24% BAND BIT2) BEGIN TEXT_SPRINT d ~%d%%f59%, ~ END
     PATCH_IF (%feats24% BAND BIT3) BEGIN TEXT_SPRINT d ~%d%%f60%, ~ END
     PATCH_IF (%feats24% BAND BIT4) BEGIN TEXT_SPRINT d ~%d%%f61%, ~ END
@@ -421,7 +421,7 @@ END
   
 
 //add portrait files (optional)
-ACTION_BASH_FOR ~%MOD_FOLDER%/%party%~ ~.*.BMP~ BEGIN
+ACTION_BASH_FOR ~%MOD_FOLDER%/%party%~ ~.*\.BMP~ BEGIN
   COPY ~%BASH_FOR_FILESPEC%~ ~override~
 END
 
@@ -444,15 +444,24 @@ ACTION_IF !(VARIABLE_IS_SET char6) BEGIN OUTER_TEXT_SPRINT char6 ~~ END
 
 
 //add to Party.ini (i.e. make selectable in party list)
-COPY ~Party.ini~ ~Party.ini~
-  APPEND_FILE_EVALUATE TEXT ~%MOD_FOLDER%/files/id2template.txt~
-  EVALUATE_BUFFER
-  REPLACE_TEXTUALLY ~, )~ ~.~
+ACTION_IF !(~%char1%~ STRING_EQUAL_CASE ~~) BEGIN
+  COPY ~Party.ini~ ~Party.ini~
+    APPEND_FILE_EVALUATE TEXT ~%MOD_FOLDER%/files/id2template.txt~
+    EVALUATE_BUFFER
+    REPLACE_TEXTUALLY ~, )~ ~.~
   
-  COUNT_REGEXP_INSTANCES ~[Party [0-9]*]~ count
-  SET partynumber = (count - 1)
-  REPLACE_TEXTUALLY ~99]~ ~%partynumber%]~
-BUT_ONLY
+    COUNT_REGEXP_INSTANCES ~[Party [0-9]*]~ count
+    SET partynumber = (count - 1)
+    REPLACE_TEXTUALLY ~99]~ ~%partynumber%]~
+  BUT_ONLY
+END
+ELSE BEGIN
+  ABORT @7    // "No CHR files in party folder"
+END
+
+
+//Add marker file to override
+COPY ~%MOD_FOLDER%/files/Party.ini~  ~override/d2partyaddermarker~
 
 
 CLEAR_MEMORY

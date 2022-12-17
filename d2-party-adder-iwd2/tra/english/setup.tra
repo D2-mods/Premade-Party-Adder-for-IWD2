@@ -1,3 +1,8 @@
+/*
+Text in this file appears in the WeiDU installer.
+*/
+
+
 //Setup
 @1 = ~Empty the party selection list~
 @2 = ~Party 1~
@@ -5,4 +10,7 @@
 @4 = ~Party 3~
 @5 = ~Party 4~
 @6 = ~Party 5~
-@7 = ~This mod is for Icewind Dale 2~
+@7 = ~No CHR files in id2party%COMPONENT_NUMBER% folder~
+@8 = ~~
+@9 = ~~
+@10 = ~~
