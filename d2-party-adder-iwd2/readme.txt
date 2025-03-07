@@ -56,6 +56,9 @@ Tools and Resources used:
 ==================================================
 Version info
 ==================================================
+v1.3
+- "Empty party selection list" has 2 subcomponents now, so it won't be automatically installed if choosing "Install all components".
+
 v1.2
 - The "Empty the party selection list" option will now be skipped if any custom parties from this mod are installed.
 - Party components will fail to install if no CHR files are in the folder. This won't give a WeiDU error. It'll just say "INSTALLATION ABORTED". If using a mod manager, installation will continue uninterrupted.
