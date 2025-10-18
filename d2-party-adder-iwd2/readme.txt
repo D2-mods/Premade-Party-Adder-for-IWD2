@@ -9,7 +9,7 @@ Overview
 Adds up to 5 premade parties to the party selection screen, including character info and customizable desciptions. 
 There's also an option to remove the existing parties.
 
-NOTE: Currently, the party info will only show unmodded Skill/Feat names.
+Note: Compatible with IWD2EE except new feats won't be listed in party creation screen.
 
 
 ==================================================
@@ -56,8 +56,8 @@ Tools and Resources used:
 ==================================================
 Version info
 ==================================================
-v1.3
-- "Empty party selection list" has 2 subcomponents now, so it won't be automatically installed if choosing "Install all components".
+v1.4 - fixed possible crash with IWD2EE.
+v1.3 - "Empty party selection list" has 2 subcomponents now, so it won't be automatically installed if choosing "Install all components".
 
 v1.2
 - The "Empty the party selection list" option will now be skipped if any custom parties from this mod are installed.

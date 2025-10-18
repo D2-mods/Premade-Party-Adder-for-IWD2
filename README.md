@@ -7,7 +7,7 @@ Installs on: Icewind Dale 2
 Adds up to 5 premade parties to the party selection screen, including character info and customizable desciptions. 
 There's also an option to remove the existing parties.
 
-NOTE: Currently, the party info will only show unmodded Skill/Feat names.
+> Note: Compatible with IWD2EE except new feats won't be listed in party creation screen.
 
 
 #### Installation:
